@@ -1,0 +1,107 @@
+{
+  "name": "@stefanprobst/next-i18n",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/cjs/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.js",
+    "require": "./dist/cjs/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "repository": "git@github.com:stefanprobst/next-i18n",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn build:cjs && yarn build:esm",
+    "build:cjs": "tsc -p tsconfig.dist.json --outDir dist/cjs --module commonjs",
+    "build:esm": "tsc -p tsconfig.dist.json",
+    "clean": "rimraf dist",
+    "format": "prettier . -l --ignore-path .gitignore",
+    "format:fix": "yarn run format --write",
+    "lint": "eslint . --cache --ignore-path .gitignore",
+    "lint:fix": "yarn run lint --fix",
+    "prepare": "simple-git-hooks || true",
+    "prepublishOnly": "yarn clean && yarn validate && yarn build",
+    "test": "jest --passWithNoTests",
+    "test:watch": "yarn run test --watch",
+    "type-check": "tsc --noEmit",
+    "validate": "yarn run format && yarn run lint && yarn run type-check && yarn test"
+  },
+  "engines": {
+    "node": "14.x",
+    "yarn": "1.x"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@stefanprobst/assert": "^1.0.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^13.2.1",
+    "@stefanprobst/commitlint-config": "^1.0.2",
+    "@stefanprobst/eslint-config-next-component": "^1.0.10",
+    "@stefanprobst/prettier-config": "^2.0.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.1.2",
+    "@types/react": "^17.0.32",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jest": "^25.2.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "jest": "^27.3.1",
+    "lint-staged": "^11.2.4",
+    "next": "^12.0.2",
+    "prettier": "^2.4.1",
+    "react": "^18.0.0-alpha-9c8161ba8-20211028",
+    "react-dom": "^18.0.0-alpha-9c8161ba8-20211028",
+    "rimraf": "^3.0.2",
+    "simple-git-hooks": "^2.6.1",
+    "typescript": "^4.4.4"
+  },
+  "peerDependencies": {
+    "next": ">=11.0.0",
+    "react": ">=16.14.0"
+  },
+  "babel": {
+    "presets": [
+      "next/babel"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@stefanprobst/commitlint-config"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "@stefanprobst/eslint-config-next-component"
+    ],
+    "rules": {
+      "@typescript-eslint/ban-types": "off",
+      "@typescript-eslint/strict-boolean-expressions": "off"
+    }
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
+  "lint-staged": {
+    "*.@(js|ts|tsx)": "eslint --cache --fix",
+    "*.@(json,md)": "prettier --write"
+  },
+  "prettier": "@stefanprobst/prettier-config",
+  "simple-git-hooks": {
+    "commit-msg": "yarn commitlint --edit",
+    "pre-commit": "yarn lint-staged",
+    "pre-push": "yarn run validate"
+  }
+}
