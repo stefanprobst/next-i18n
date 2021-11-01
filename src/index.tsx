@@ -45,7 +45,7 @@ if (process.env['NODE_ENV'] !== 'production') {
 
 export function useI18n<
   TDictionaryMap extends DictionaryMap,
-  TLocale extends string,
+  TLocale extends string = string,
 >(): I18nContextValue<TDictionaryMap> {
   /* @ts-expect-error */
   const value = useContext<I18nContextValue<TDictionaryMap, TLocale> | null>(I18nContext)
