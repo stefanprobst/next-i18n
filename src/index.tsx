@@ -39,6 +39,9 @@ interface I18nContextValue<
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null)
+if (process.env['NODE_ENV'] !== 'production') {
+  I18nContext.displayName = 'I18nContext'
+}
 
 export function useI18n<
   TDictionaryMap extends DictionaryMap,
