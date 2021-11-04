@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { assert } from '@stefanprobst/assert'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router.js'
 import type { ElementType, ReactNode } from 'react'
 import { createContext, Fragment, useContext, useMemo } from 'react'
 /* @ts-expect-error */
