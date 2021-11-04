@@ -113,8 +113,6 @@ it('substitutes component', () => {
 
   render(<App />, { wrapper: createWrapper(dict) })
 
-  screen.debug()
-
   expect(screen.getByRole('heading')).toHaveTextContent('Hello Stefan')
   expect(screen.getByRole('button')).toHaveTextContent('Stefan')
 })
@@ -135,8 +133,6 @@ it('substitutes JSX component', () => {
   }
 
   render(<App />, { wrapper: createWrapper(dict) })
-
-  screen.debug()
 
   expect(screen.getByRole('heading')).toHaveTextContent('Hello Stefan')
   expect(screen.getByRole('button')).toHaveTextContent('Stefan')
