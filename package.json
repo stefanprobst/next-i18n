@@ -1,13 +1,13 @@
 {
   "name": "@stefanprobst/next-i18n",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "main": "dist/cjs/index.js",
   "types": "dist/index.d.ts",
   "exports": {
+    "types": "./dist/index.d.ts",
     "import": "./dist/index.js",
-    "require": "./dist/cjs/index.js",
-    "types": "./dist/index.d.ts"
+    "require": "./dist/cjs/index.js"
   },
   "repository": "git@github.com:stefanprobst/next-i18n",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "validate": "yarn run format && yarn run lint && yarn run type-check && yarn test"
   },
   "engines": {
-    "node": "14.x",
+    "node": ">=14.17",
     "yarn": "1.x"
   },
   "sideEffects": false,
