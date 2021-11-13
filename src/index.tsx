@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import { assert } from '@stefanprobst/assert'
 import { useRouter } from 'next/router.js'
 import type { ElementType, ReactNode } from 'react'
@@ -128,12 +125,14 @@ export function I18nProvider(props: I18nProviderProps): JSX.Element {
 //
 
 function get(obj: object, keypath: TranslateKeyPath): unknown {
+  /* eslint-disable no-param-reassign */
   keypath = typeof keypath === 'string' ? keypath.split('.') : keypath
   for (let i = 0; i < keypath.length; i++) {
     /* @ts-expect-error */
     obj = obj[keypath[i]]
     if (obj == null) break
   }
+  /* eslint-enable no-param-reassign */
   return obj
 }
 

@@ -3,18 +3,18 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 import type { NextRouter } from 'next/router'
-import type { ReactNode } from 'react'
+import type { FC, ReactNode } from 'react'
 
 import { I18nProvider, useI18n } from '../src'
 
 const locale = 'en'
 
-function createWrapper(dict: object) {
+function createWrapper(dict: object): FC {
   const mockRouter = {
     locale,
   } as NextRouter
 
-  return function Wrapper(props: { children: ReactNode }) {
+  return function Wrapper(props) {
     return (
       <RouterContext.Provider value={mockRouter}>
         <I18nProvider dictionaries={dict}>{props.children}</I18nProvider>
@@ -121,6 +121,7 @@ it('substitutes JSX component', () => {
   const dict = { common: { hello: 'Hello <s>{{name}}</s>' } }
 
   function Button(props: { children: ReactNode }) {
+    /* eslint-disable-next-line testing-library/no-node-access */
     return <button className="primary">{props.children}</button>
   }
 

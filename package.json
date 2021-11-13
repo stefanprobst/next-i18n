@@ -39,34 +39,24 @@
     "@stefanprobst/assert": "^1.0.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^13.2.1",
+    "@commitlint/cli": "^14.1.0",
+    "@next/eslint-plugin-next": "^12.0.3",
     "@stefanprobst/commitlint-config": "^1.0.2",
-    "@stefanprobst/eslint-config-next-component": "^1.0.10",
+    "@stefanprobst/eslint-config-next": "^4.0.1",
     "@stefanprobst/prettier-config": "^2.0.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.1.2",
-    "@types/react": "^17.0.32",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^13.0.0-alpha.4",
+    "@types/react": "^17.0.34",
     "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-import-resolver-typescript": "^2.5.0",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-jest": "^25.2.2",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.26.1",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
     "jest": "^27.3.1",
-    "lint-staged": "^11.2.4",
-    "next": "^12.0.2",
+    "lint-staged": "^11.2.6",
+    "next": "^12.0.3",
     "prettier": "^2.4.1",
-    "react": "^18.0.0-alpha-9c8161ba8-20211028",
-    "react-dom": "^18.0.0-alpha-9c8161ba8-20211028",
+    "react": "^18.0.0-alpha-cb11155c8-20211112",
+    "react-dom": "^18.0.0-alpha-cb11155c8-20211112",
     "rimraf": "^3.0.2",
-    "simple-git-hooks": "^2.6.1",
-    "typescript": "^4.4.4"
+    "simple-git-hooks": "^2.7.0",
+    "typescript": "^4.5.1-rc"
   },
   "peerDependencies": {
     "next": ">=11.0.0",
@@ -84,10 +74,12 @@
   },
   "eslintConfig": {
     "extends": [
-      "@stefanprobst/eslint-config-next-component"
+      "@stefanprobst/eslint-config-next"
     ],
     "rules": {
+      "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/ban-types": "off",
+      "@typescript-eslint/no-unnecessary-condition": "off",
       "@typescript-eslint/strict-boolean-expressions": "off"
     }
   },
@@ -96,7 +88,7 @@
   },
   "lint-staged": {
     "*.@(js|ts|tsx)": "eslint --cache --fix",
-    "*.@(json,md)": "prettier --write"
+    "*.@(json|md)": "prettier --write"
   },
   "prettier": "@stefanprobst/prettier-config",
   "simple-git-hooks": {
