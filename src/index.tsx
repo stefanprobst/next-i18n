@@ -30,7 +30,7 @@ interface I18nContextValue<
   plural: (value: number, options?: Intl.PluralRulesOptions) => Intl.LDMLPluralRule
   sort: (value: Array<string>, options?: Intl.CollatorOptions) => Array<string>
   t: (
-    keypath: KeyPathsArray<TDictionaryMap> | KeyPathsString<TDictionaryMap>,
+    keypath: KeyPathTuples<TDictionaryMap> | KeyPathStrings<TDictionaryMap>,
     options?: TranslateOptions,
   ) => string
 }
@@ -174,19 +174,43 @@ function interpolateJsx(
 
 //
 
-type ValidKey<TObj extends object> = TObj extends ReadonlyArray<unknown> ? number : string | number
+/**
+ * @see https://stackoverflow.com/a/58436959/6826422
+ */
 
-type KeyPathsString<TObj extends object> = {
-  [K in keyof TObj & ValidKey<TObj>]: TObj[K] extends object
-    ? /* @ts-expect-error */
-      `${K}.${KeyPathsString<TObj[K]>}`
-    : `${K}`
-}[keyof TObj & ValidKey<TObj>]
+type Join<K, P> = K extends string | number
+  ? P extends string | number
+    ? `${K}${'' extends P ? '' : '.'}${P}`
+    : never
+  : never
 
-type KeyPathsArray<TObj extends object> = [
-  ...{
-    [K in keyof TObj & ValidKey<TObj>]: TObj[K] extends object
-      ? [K, ...KeyPathsArray<TObj[K]>]
-      : [K]
-  }[keyof TObj & ValidKey<TObj>]
-]
+type Cons<H, T> = T extends ReadonlyArray<any>
+  ? ((h: H, ...t: T) => void) extends (...r: infer R) => void
+    ? R
+    : never
+  : never
+
+type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+type Values<T> = T[keyof T]
+
+type LeavesTuples<T, Depth extends number = 4> = Depth extends never
+  ? never
+  : T extends object
+  ? T extends Array<infer Item>
+    ? Cons<number, LeavesTuples<Item, Prev[Depth]>>
+    : Values<{ [P in keyof T & (string | number)]-?: Cons<P, LeavesTuples<T[P], Prev[Depth]>> }>
+  : []
+
+type LeavesString<T, Depth extends number = 4> = Depth extends never
+  ? never
+  : T extends object
+  ? T extends Array<infer Item>
+    ? Join<number, LeavesString<Item, Prev[Depth]>>
+    : Values<{
+        [P in keyof T & (string | number)]-?: Join<P, LeavesString<T[P], Prev[Depth]>>
+      }>
+  : ''
+
+type KeyPathStrings<T> = LeavesString<T>
+type KeyPathTuples<T> = LeavesTuples<T>
