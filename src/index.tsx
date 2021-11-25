@@ -155,6 +155,7 @@ const rejsx = /<(\w+)>(.*?)<\/\1>|<(\w+)\/>/
 function interpolateJsx(
   str: string,
   components: Record<string, ElementType>,
+  depth = 0,
 ): Array<string | JSX.Element> {
   const match = rejsx.exec(str)
 
@@ -167,8 +168,8 @@ function interpolateJsx(
 
   return [
     before,
-    _jsx(name, { children: interpolateJsx(inner, components) }),
-    ...interpolateJsx(after, components),
+    _jsx(name, { key: depth, children: interpolateJsx(inner, components, depth + 1) }),
+    ...interpolateJsx(after, components, depth + 1),
   ]
 }
 
@@ -184,7 +185,7 @@ type Join<K, P> = K extends string | number
     : never
   : never
 
-type Cons<H, T> = T extends ReadonlyArray<any>
+type Cons<H, T> = T extends ReadonlyArray<unknown>
   ? ((h: H, ...t: T) => void) extends (...r: infer R) => void
     ? R
     : never
