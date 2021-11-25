@@ -14,7 +14,7 @@ type TranslateOptions = {
   /** locale?: string */
 }
 
-interface I18nContextValue<
+export interface I18nContextValue<
   TDictionaryMap extends DictionaryMap = DictionaryMap,
   TLocale extends string = string,
 > {
