@@ -32,7 +32,7 @@ export interface I18nContextValue<
   t: (
     keypath: KeyPathTuples<TDictionaryMap> | KeyPathStrings<TDictionaryMap>,
     options?: TranslateOptions,
-  ) => string
+  ) => string | JSX.Element
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null)
