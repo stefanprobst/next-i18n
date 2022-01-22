@@ -29,10 +29,10 @@ export interface I18nContextValue<
   locale: TLocale | undefined
   plural: (value: number, options?: Intl.PluralRulesOptions) => Intl.LDMLPluralRule
   sort: (value: Array<string>, options?: Intl.CollatorOptions) => Array<string>
-  t: (
+  t: <O extends TranslateOptions>(
     keypath: KeyPathTuples<TDictionaryMap> | KeyPathStrings<TDictionaryMap>,
-    options?: TranslateOptions,
-  ) => string | JSX.Element
+    options?: O,
+  ) => O extends { components: object } ? JSX.Element : string
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null)
