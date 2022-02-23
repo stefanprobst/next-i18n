@@ -195,7 +195,7 @@ type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 type Values<T> = T[keyof T]
 
-type LeavesTuples<T, Depth extends number = 4> = Depth extends never
+type LeavesTuples<T, Depth extends number = 5> = Depth extends never
   ? never
   : T extends object
   ? T extends Array<infer Item>
@@ -203,7 +203,7 @@ type LeavesTuples<T, Depth extends number = 4> = Depth extends never
     : Values<{ [P in keyof T & (string | number)]-?: Cons<P, LeavesTuples<T[P], Prev[Depth]>> }>
   : []
 
-type LeavesString<T, Depth extends number = 4> = Depth extends never
+type LeavesString<T, Depth extends number = 5> = Depth extends never
   ? never
   : T extends object
   ? T extends Array<infer Item>
