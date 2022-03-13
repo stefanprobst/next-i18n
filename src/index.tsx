@@ -6,9 +6,9 @@ import { createContext, Fragment, useContext, useMemo } from 'react'
 import { jsx as _jsx } from 'react/jsx-runtime'
 
 type DictionaryMap = object
-type TranslateKeyPath = string | Array<string | number>
+type TranslateKeyPath = Array<number | string> | string
 type TranslateOptions = {
-  values?: Record<string | number, string>
+  values?: Record<number | string, string>
   components?: Record<string, ElementType>
   count?: number
   /** locale?: string */
@@ -29,10 +29,11 @@ export interface I18nContextValue<
   locale: TLocale | undefined
   plural: (value: number, options?: Intl.PluralRulesOptions) => Intl.LDMLPluralRule
   sort: (value: Array<string>, options?: Intl.CollatorOptions) => Array<string>
-  t: <O extends TranslateOptions>(
-    keypath: KeyPathTuples<TDictionaryMap> | KeyPathStrings<TDictionaryMap>,
-    options?: O,
-  ) => O extends { components: object } ? JSX.Element : string
+  createCollator: (options?: Intl.CollatorOptions) => Intl.Collator['compare']
+  t: (
+    keypath: KeyPathStrings<TDictionaryMap> | KeyPathTuples<TDictionaryMap>,
+    options?: TranslateOptions,
+  ) => string
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null)
@@ -91,6 +92,10 @@ export function I18nProvider(props: I18nProviderProps): JSX.Element {
       return value.sort(new Intl.Collator(locale, options).compare)
     }
 
+    function createCollator(options?: Intl.CollatorOptions) {
+      return new Intl.Collator(locale, options).compare
+    }
+
     function translate(keypath: TranslateKeyPath, options?: TranslateOptions) {
       const entry = get(dictionaries, keypath) as string | undefined
       if (entry == null) return ''
@@ -115,6 +120,7 @@ export function I18nProvider(props: I18nProviderProps): JSX.Element {
       locale,
       plural,
       sort,
+      createCollator,
       t: translate,
     }
   }, [locale, dictionaries])
@@ -140,7 +146,7 @@ function get(obj: object, keypath: TranslateKeyPath): unknown {
 
 const re = /{{(.*?)}}/g
 
-function interpolate(str: string, values: Record<string | number, string>): string {
+function interpolate(str: string, values: Record<number | string, string>): string {
   return str.replace(re, (_matches, p) => {
     const value = get(values, p.trim()) as string | undefined
     if (value == null) return ''
@@ -156,7 +162,7 @@ function interpolateJsx(
   str: string,
   components: Record<string, ElementType>,
   depth = 0,
-): Array<string | JSX.Element> {
+): Array<JSX.Element | string> {
   const match = rejsx.exec(str)
 
   if (match == null) return [str]
@@ -179,8 +185,8 @@ function interpolateJsx(
  * @see https://stackoverflow.com/a/58436959/6826422
  */
 
-type Join<K, P> = K extends string | number
-  ? P extends string | number
+type Join<K, P> = K extends number | string
+  ? P extends number | string
     ? `${K}${'' extends P ? '' : '.'}${P}`
     : never
   : never
@@ -195,21 +201,21 @@ type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 type Values<T> = T[keyof T]
 
-type LeavesTuples<T, Depth extends number = 4> = Depth extends never
+type LeavesTuples<T, Depth extends number = 5> = Depth extends never
   ? never
   : T extends object
   ? T extends Array<infer Item>
     ? Cons<number, LeavesTuples<Item, Prev[Depth]>>
-    : Values<{ [P in keyof T & (string | number)]-?: Cons<P, LeavesTuples<T[P], Prev[Depth]>> }>
+    : Values<{ [P in keyof T & (number | string)]-?: Cons<P, LeavesTuples<T[P], Prev[Depth]>> }>
   : []
 
-type LeavesString<T, Depth extends number = 4> = Depth extends never
+type LeavesString<T, Depth extends number = 5> = Depth extends never
   ? never
   : T extends object
   ? T extends Array<infer Item>
     ? Join<number, LeavesString<Item, Prev[Depth]>>
     : Values<{
-        [P in keyof T & (string | number)]-?: Join<P, LeavesString<T[P], Prev[Depth]>>
+        [P in keyof T & (number | string)]-?: Join<P, LeavesString<T[P], Prev[Depth]>>
       }>
   : ''
 
