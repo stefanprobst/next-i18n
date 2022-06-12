@@ -2,7 +2,7 @@ import { assert } from '@stefanprobst/assert'
 import { useRouter } from 'next/router.js'
 import type { ElementType, ReactNode } from 'react'
 import { createContext, Fragment, useContext, useMemo } from 'react'
-/* @ts-expect-error */
+// @ts-expect-error
 import { jsx as _jsx } from 'react/jsx-runtime'
 
 type DictionaryMap = object
@@ -11,7 +11,7 @@ type TranslateOptions = {
   values?: Record<number | string, string>
   components?: Record<string, ElementType>
   count?: number
-  /** locale?: string */
+  // locale?: string
 }
 
 export interface I18nService<
@@ -45,7 +45,7 @@ export function useI18n<
   TDictionaryMap extends DictionaryMap,
   TLocale extends string = string,
 >(): I18nService<TDictionaryMap, TLocale> {
-  /* @ts-expect-error */
+  // @ts-expect-error
   const value = useContext<I18nService<TDictionaryMap, TLocale> | null>(I18nContext)
 
   assert(value != null, '`useI18n` must be nested inside an `I18nProvider`.')
@@ -76,7 +76,7 @@ export function I18nProvider(props: I18nProviderProps): JSX.Element {
 export function createI18nService<
   TDictionaryMap extends DictionaryMap = DictionaryMap,
   TLocale extends string = string,
->(locale: TLocale, dictionaries: TDictionaryMap): I18nService {
+>(locale: TLocale, dictionaries: TDictionaryMap): I18nService<TDictionaryMap, TLocale> {
   function formatDateTime(value: Date | number, options?: Intl.DateTimeFormatOptions) {
     return new Intl.DateTimeFormat(locale, options).format(value)
   }
@@ -125,6 +125,7 @@ export function createI18nService<
     return _jsx(Fragment, { children: interpolateJsx(interpolated, options.components) })
   }
 
+  // @ts-expect-error
   return {
     formatDateTime,
     // formatList,
