@@ -19,7 +19,7 @@ export interface I18nService<
   TLocale extends string = string,
 > {
   formatDateTime: (value: Date | number, options?: Intl.DateTimeFormatOptions) => string
-  // formatList: (value: Array<string>, options?: Intl.ListFormatOptions) => string
+  formatList: (value: Array<string>, options?: Intl.ListFormatOptions) => string
   formatNumber: (value: number, options?: Intl.NumberFormatOptions) => string
   formatRelativeTime: (
     value: number,
@@ -45,8 +45,8 @@ export function useI18n<
   TDictionaryMap extends DictionaryMap,
   TLocale extends string = string,
 >(): I18nService<TDictionaryMap, TLocale> {
-  // @ts-expect-error
-  const value = useContext<I18nService<TDictionaryMap, TLocale> | null>(I18nContext)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const value = useContext<I18nService<TDictionaryMap, TLocale> | null>(I18nContext as any)
 
   assert(value != null, '`useI18n` must be nested inside an `I18nProvider`.')
 
@@ -81,9 +81,9 @@ export function createI18nService<
     return new Intl.DateTimeFormat(locale, options).format(value)
   }
 
-  // function formatList(value: Array<string>, options?: Intl.ListFormatOptions) {
-  //   return new Intl.ListFormat(locale, options).format(value)
-  // }
+  function formatList(value: Array<string>, options?: Intl.ListFormatOptions) {
+    return new Intl.ListFormat(locale, options).format(value)
+  }
 
   function formatNumber(value: number, options?: Intl.NumberFormatOptions) {
     return new Intl.NumberFormat(locale, options).format(value)
@@ -125,10 +125,9 @@ export function createI18nService<
     return _jsx(Fragment, { children: interpolateJsx(interpolated, options.components) })
   }
 
-  // @ts-expect-error
   return {
     formatDateTime,
-    // formatList,
+    formatList,
     formatNumber,
     formatRelativeTime,
     locale,
@@ -136,7 +135,7 @@ export function createI18nService<
     sort,
     createCollator,
     t: translate,
-  }
+  } as any // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 //
