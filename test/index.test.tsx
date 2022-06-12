@@ -14,7 +14,7 @@ const defaultLocale = 'en'
 function createWrapper(dict: object, locale = defaultLocale): FC {
   const mockRouter = { locale } as NextRouter
 
-  return function Wrapper(props) {
+  return function Wrapper(props: { children?: ReactNode }) {
     return (
       <RouterContext.Provider value={mockRouter}>
         <I18nProvider dictionaries={dict}>{props.children}</I18nProvider>
